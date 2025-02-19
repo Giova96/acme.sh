@@ -31,7 +31,7 @@ dns_freemyip_add() {
   #save the credentials to the account conf file.
   _saveaccountconf_mutable FREEMYIP_Token "$FREEMYIP_Token"
 
-  if _is_root_domain_published $fulldomain; then
+  if _is_root_domain_published "$fulldomain"; then
     _err "freemyip API don't allow you to set multiple TXT record for the same subdomain!"
     _err "You must apply certificate for only one domain at a time!"
     _err "===="
@@ -92,11 +92,11 @@ _is_root_domain_published() {
   _fmi_d="$1"
   _webroot="$(_get_root "$_fmi_d")"
 
-  _info "Verifying '"$_fmi_d"' freemyip webroot ("$_webroot") is not published yet"
+  _info "Verifying '""$_fmi_d""' freemyip webroot (""$_webroot"") is not published yet"
   for i in $(seq 1 3); do
     _debug "'$_webroot' ns lookup, retry $i/3..."
     if [ "$(_ns_lookup "$_fmi_d" TXT)" ]; then
-      _debug "'$webroot' already has a TXT record published!"
+      _debug "'$_webroot' already has a TXT record published!"
       return 0
     fi
     _sleep 10 # Give it some time to propagate the TXT record
